@@ -127,6 +127,7 @@
     },
 
     draw: function(ctx) {
+      if (!this.board) return;
       ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0,0,CW,CH);
 
       // Grid

@@ -48,6 +48,23 @@
       self._buttons = {};
       self._buttonTimers = {};
 
+      // Attach shoot to self so button handlers can call it
+      self._shoot = function() {
+        if (self._fireCooldown > 0) return;
+        if (self.bullets.length >= MAX_BULLETS) return;
+        if (!self.ship.alive) return;
+        var bullet = {
+          x: self.ship.x + Math.cos(self.ship.angle) * SHIP_SIZE,
+          y: self.ship.y + Math.sin(self.ship.angle) * SHIP_SIZE,
+          vx: Math.cos(self.ship.angle) * BULLET_SPEED,
+          vy: Math.sin(self.ship.angle) * BULLET_SPEED,
+          life: BULLET_LIFE,
+          r: 2
+        };
+        self.bullets.push(bullet);
+        self._fireCooldown = 0.15;
+      };
+
       self._onKeyDown = function(e) { self._keys[e.key] = true; };
       self._onKeyUp = function(e) { self._keys[e.key] = false; };
       window.addEventListener('keydown', self._onKeyDown);

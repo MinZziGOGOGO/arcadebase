@@ -96,7 +96,9 @@
     },
 
     start: function() {
+      this.restart();
       this.showOverlay('PAC-MAN', 'Clear the maze!', null, 'START');
+      this.state = 'title';
     },
 
     restart: function() {
@@ -411,6 +413,7 @@
 
     draw: function(ctx) {
       var self = this;
+      if (!self._maze) return;
 
       // Background
       ctx.fillStyle = '#0a0a0a';

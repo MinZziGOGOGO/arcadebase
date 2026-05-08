@@ -52,3 +52,10 @@ If `delegate_task` subagents fail (API errors, timeouts):
 - Server: `python3 -m http.server 8090` from project root
 - All 27 kanban tasks done
 - No blocked/stale tasks
+- GitHub: https://github.com/MinZziGOGOGO/arcadebase
+
+## Related skills (load these for future work)
+
+- `kanban-complex-task-splitting` — when creating kanban tasks for any game >400 lines
+- `mobile-web-touch-rules` — when touching CSS scroll, touch handlers, or UI patterns
+- `diagnose-stuck-kanban-tasks` — when tasks stall in ready/running/blocked states

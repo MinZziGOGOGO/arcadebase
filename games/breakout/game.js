@@ -122,9 +122,11 @@
       canvas.addEventListener('click', self._onClick);
     },
 
-    // ── Title screen ──
-    start() {
+    // ── Start game ──
+    start: function() {
+      this.restart();
       this.showOverlay('BREAKOUT', 'Classic brick breaker', null, 'START');
+      this.state = 'title';
     },
 
     // ── Reset for new game ──
@@ -336,6 +338,7 @@
     // ── Render ──
     draw(ctx) {
       const canvas = this.canvas;
+      if (!this.paddle) return;
 
       // Background
       ctx.fillStyle = '#0a0a0a';

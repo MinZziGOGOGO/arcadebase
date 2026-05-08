@@ -91,6 +91,13 @@
         flagBtn.textContent = flagMode ? '🚩 FLAG ON' : '🚩 FLAG';
         flagBtn.className = flagMode ? 'btn btn-pink' : 'btn gold';
       });
+      flagBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        flagMode = !flagMode;
+        flagBtn.textContent = flagMode ? '🚩 FLAG ON' : '🚩 FLAG';
+        flagBtn.className = flagMode ? 'btn btn-pink' : 'btn gold';
+      }, { passive: false });
     },
 
     start() {

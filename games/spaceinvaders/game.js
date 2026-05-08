@@ -48,6 +48,16 @@
       self._touchActive = false;
       self._touchFire = false;
 
+      // Attach shoot method to self so touch handlers can call it
+      self._tryShoot = function() {
+        if (self.state !== 'playing') return;
+        if (self._bullets.length > 0) return;
+        self._bullets.push({
+          x: self._shipX + SHIP_W / 2 - BULLET_W / 2,
+          y: SHIP_Y - BULLET_H
+        });
+      };
+
       self._onKeyDown = function(e) {
         self._keys[e.key] = true;
       };

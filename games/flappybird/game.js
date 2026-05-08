@@ -53,8 +53,10 @@
     },
 
     // ── Title screen ──
-    start() {
-      this._showOverlay('FLAPPY BIRD', 'Tap to flap!', null, 'START');
+    start: function() {
+      this.restart();
+      this.showOverlay('FLAPPY BIRD', 'Tap to flap!', null, 'START');
+      this.state = 'title';
     },
 
     // ── Reset for new game ──
@@ -203,6 +205,7 @@
     // ── Render ──
     draw(ctx) {
       const canvas = this.canvas;
+      if (!this.bird) return;
 
       // Sky gradient
       const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height - GROUND_H);
