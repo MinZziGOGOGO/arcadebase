@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SNAKE · ARCADEBASE</title>
+  <link rel="stylesheet" href="../../shared/styles.css">
+  <style>
+    .game-page {
+      display: flex; flex-direction: column; align-items: center;
+      width: 100%; height: 100vh;
+      background: var(--bg-dark);
+      position: relative;
+      gap: 4px;
+    }
+
+    .dpad-area {
+      flex-shrink: 0;
+      padding: 4px 0 8px 0;
+    }
+
+    /* Fix missing .game-hud styling from shared */
+    .game-hud {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 400px;
+      padding: 4px 8px;
+      background: var(--bg-panel);
+      border: 1px solid var(--neon-cyan);
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .game-hud .score {
+      color: var(--neon-gold);
+      font-size: 7px;
+    }
+    .game-hud .high-score {
+      color: var(--neon-purple);
+      font-size: 7px;
+    }
+    .game-hud .btn {
+      font-size: 10px;
+      padding: 4px 8px;
+      min-width: 36px;
+      min-height: 36px;
+    }
+    .game-hud .btn.pink {
+      color: var(--neon-pink);
+      border-color: var(--neon-pink);
+      background: rgba(255, 0, 110, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="game-page">
+    <a href="../../index.html" class="back-link">← BACK</a>
+    <div class="game-container" id="game-container">
+      <div class="canvas-wrapper" id="canvas-wrapper"></div>
+    </div>
+    <div class="dpad-area">
+      <div class="dpad" id="dpad">
+        <button class="dpad-btn dpad-up"    id="dpad-up">▲</button>
+        <button class="dpad-btn dpad-left"  id="dpad-left">◄</button>
+        <button class="dpad-btn dpad-center"></button>
+        <button class="dpad-btn dpad-right" id="dpad-right">►</button>
+        <button class="dpad-btn dpad-down"  id="dpad-down">▼</button>
+      </div>
+    </div>
+  </div>
+  <script src="../../shared/utils.js"></script>
+  <script src="../../shared/game-base.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

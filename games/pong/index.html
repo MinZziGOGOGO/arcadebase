@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>PONG · ARCADEBASE</title>
+  <link rel="stylesheet" href="../../shared/styles.css">
+  <style>
+    .game-page {
+      display: flex; flex-direction: column; align-items: center;
+      width: 100%; height: 100vh;
+      background: var(--bg-dark);
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-page">
+    <a href="../../index.html" class="back-link">← BACK</a>
+    <div class="game-container" id="game-container">
+      <div class="canvas-wrapper" id="canvas-wrapper"></div>
+    </div>
+  </div>
+  <script>
+    // Pong help button (standalone, doesn't use GameBase help system)
+    (function() {
+      var btn = document.createElement('button');
+      btn.className = 'help-btn';
+      btn.textContent = '?';
+      document.querySelector('.game-page').appendChild(btn);
+      btn.addEventListener('click', function() {
+        var popup = document.createElement('div');
+        popup.className = 'help-popup';
+        popup.innerHTML = '<div class="help-popup-inner"><h3>PONG RULES</h3><p>Drag left half of screen to move paddle<br>First to 7 points wins<br>Ball speeds up with each hit<br>Best defense = fewest AI points allowed</p><button class="btn btn-cyan" id="phelp-close">GOT IT</button></div>';
+        document.body.appendChild(popup);
+        document.getElementById('phelp-close').addEventListener('click', function() { popup.remove(); });
+        popup.addEventListener('click', function(e) { if (e.target === popup) popup.remove(); });
+      });
+    })();
+  </script>
+  <script src="../../shared/utils.js"></script>
+  <script src="../../shared/game-base.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

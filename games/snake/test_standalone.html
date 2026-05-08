@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Snake Standalone Test</title>
+<style>
+body { margin:0; background:#0a0a0a; display:flex; justify-content:center; align-items:center; height:100vh; }
+canvas { border:2px solid #00f0ff; image-rendering:pixelated; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+var canvas = document.getElementById('c');
+var ctx = canvas.getContext('2d');
+var GRID = 20, CS = 20;
+canvas.width = canvas.height = GRID * CS;
+
+var body, dir, nextDir, food, timer, interval, eaten, score, high, state;
+
+function reset() {
+  var cx = 10, cy = 10;
+  body = [{x:cx,y:cy},{x:cx-1,y:cy},{x:cx-2,y:cy}];
+  dir = {dx:1,dy:0}; nextDir = null; timer = 0; interval = 150; eaten = 0; score = 0;
+  high = +(localStorage.getItem('snake_hi')||0);
+  spawnFood();
+  state = 'playing';
+}
+
+function spawnFood() {
+  var a = [];
+  for (var x=0;x<GRID;x++) for (var y=0;y<GRID;y++)
+    if (!body.some(function(s){return s.x===x&&s.y===y;})) a.push({x:x,y:y});
+  food = a.length ? a[Math.floor(Math.random()*a.length)] : null;
+}
+
+function queueDir(name) {
+  var map = {up:{dx:0,dy:-1},down:{dx:0,dy:1},left:{dx:-1,dy:0},right:{dx:1,dy:0}};
+  var t = map[name]; if (!t) return;
+  var c = nextDir || dir;
+  if (!c) { nextDir = t; return; }
+  if (c.dx+t.dx===0 && c.dy+t.dy===0) return;
+  nextDir = t;
+}
+
+function gameOver() {
+  state = 'over';
+  if (score > high) { high = score; localStorage.setItem('snake_hi', high); }
+}
+
+var last = 0;
+function loop(ts) {
+  requestAnimationFrame(loop);
+  var dt = last ? Math.min(ts - last, 50) : 0;
+  last = ts;
+
+  if (state === 'playing') {
+    timer += dt;
+    while (timer >= interval) {
+      timer -= interval;
+      if (nextDir) { dir = nextDir; nextDir = null; }
+      var h = body[0];
+      var nh = {x:h.x+dir.dx, y:h.y+dir.dy};
+      if (nh.x<0||nh.x>=GRID||nh.y<0||nh.y>=GRID) { gameOver(); break; }
+      for (var i=0;i<body.length-1;i++)
+        if (body[i].x===nh.x&&body[i].y===nh.y) { gameOver(); break; }
+      if (state !== 'playing') break;
+      body.unshift(nh);
+      if (food && nh.x===food.x&&nh.y===food.y) {
+        score += 10; eaten++; interval = Math.max(60, 150 - eaten*2); spawnFood();
+      } else body.pop();
+    }
+  }
+
+  // draw
+  ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0,0,400,400);
+  ctx.strokeStyle = '#111122'; ctx.lineWidth=1;
+  for (var i=0;i<=GRID;i++) {
+    ctx.beginPath();ctx.moveTo(i*CS,0);ctx.lineTo(i*CS,400);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,i*CS);ctx.lineTo(400,i*CS);ctx.stroke();
+  }
+  if (food) { ctx.fillStyle='#ff006e';var p=3;ctx.fillRect(food.x*CS+p,food.y*CS+p,CS-p*2,CS-p*2); }
+  if (!body) return;
+  for (var i=body.length-1;i>=0;i--) {
+    var s=body[i],sx=s.x*CS,sy=s.y*CS,p=1;
+    ctx.fillStyle = i===0 ? '#39ff14' : '#00cc22';
+    ctx.fillRect(sx+p,sy+p,CS-p*2,CS-p*2);
+  }
+  if (state==='title'||state==='over') {
+    ctx.fillStyle='rgba(10,10,10,0.85)';ctx.fillRect(0,0,400,400);
+    ctx.fillStyle='#00f0ff';ctx.font='14px monospace';ctx.textAlign='center';
+    ctx.fillText(state==='title'?'SNAKE':'GAME OVER',200,180);
+    ctx.fillStyle='#ffbe0b';ctx.font='10px monospace';ctx.fillText('Score: '+score,200,210);
+    ctx.fillStyle='#8338ec';ctx.fillText('Best: '+high,200,230);
+    ctx.fillStyle='#fff';ctx.font='8px monospace';
+    ctx.fillText(state==='title'?'Tap or press key':'Tap to restart',200,260);
+  }
+}
+
+// Swipe on canvas
+var sx,sy,st;
+canvas.addEventListener('touchstart',function(e){var t=e.touches[0];sx=t.clientX;sy=t.clientY;st=Date.now();e.preventDefault();},{passive:false});
+canvas.addEventListener('touchend',function(e){
+  if (state!=='playing') return;
+  var t=e.changedTouches[0];var dx=t.clientX-sx,dy=t.clientY-sy,d=Math.sqrt(dx*dx+dy*dy);
+  if (d<30||Date.now()-st>300) return;
+  var a=Math.atan2(-dy,dx)*180/Math.PI;
+  if (a>-45&&a<=45) queueDir('right');
+  else if (a>45&&a<=135) queueDir('up');
+  else if (a>135||a<=-135) queueDir('left');
+  else queueDir('down');
+  e.preventDefault();
+},{passive:false});
+
+// Keyboard
+window.addEventListener('keydown',function(e){
+  var k={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',s:'down',a:'left',d:'right'}[e.key];
+  if (k) { e.preventDefault();
+    if (state==='playing') queueDir(k);
+  }
+});
+
+// Click to start/restart
+canvas.addEventListener('click',function(){
+  if (state==='title'||state==='over') reset();
+});
+
+state = 'title';
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

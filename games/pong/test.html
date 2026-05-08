@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Pong Test</title>
+<link rel="stylesheet" href="../../shared/styles.css">
+</head><body>
+<div class="game-page">
+  <a href="../../index.html" class="back-link">← BACK</a>
+  <div class="game-container" id="game-container">
+    <div class="canvas-wrapper" id="canvas-wrapper"></div>
+  </div>
+</div>
+<script src="../../shared/utils.js"></script>
+<script src="../../shared/game-base.js"></script>
+<script>
+// Minimal Pong test — no touch, just ball + AI
+(function() {
+  var PADDLE_W=10, PADDLE_H=80, BALL_R=6;
+
+  var game = GameBase.create({
+    container: document.getElementById('canvas-wrapper'),
+    canvasW: 400,
+    canvasH: 300,
+    gameKey: 'pong',
+
+    init: function(canvas, ctx) {
+      this.playerY = 110;
+      this.aiY = 110;
+      this.ballX = 200;
+      this.ballY = 150;
+      this.ballVX = -200;
+      this.ballVY = 50;
+      this.aiScore = 0;
+    },
+
+    start: function() {
+      this._showOverlay('PONG', 'test', null, 'START');
+    },
+
+    restart: function() {
+      this.playerY = 110;
+      this.aiY = 110;
+      this.ballX = 200;
+      this.ballY = 150;
+      this.ballVX = -200;
+      this.ballVY = 50;
+      this.aiScore = 0;
+    },
+
+    update: function(dt) {
+      var g = this;
+      var ch = g.canvas.height, cw = g.canvas.width;
+
+      // Clamp
+      if (g.playerY < 0) g.playerY = 0;
+      if (g.playerY > ch - PADDLE_H) g.playerY = ch - PADDLE_H;
+
+      // Simple AI: always follow ball
+      var aiC = g.aiY + PADDLE_H/2;
+      var d = g.ballY - aiC;
+      var max = 200 * dt;
+      if (d > max) d = max; else if (d < -max) d = -max;
+      g.aiY += d;
+      if (g.aiY < 0) g.aiY = 0;
+      if (g.aiY > ch - PADDLE_H) g.aiY = ch - PADDLE_H;
+
+      // Ball
+      g.ballX += g.ballVX * dt;
+      g.ballY += g.ballVY * dt;
+
+      // Walls
+      if (g.ballY < BALL_R) { g.ballY = BALL_R; g.ballVY = -g.ballVY; }
+      if (g.ballY > ch - BALL_R) { g.ballY = ch - BALL_R; g.ballVY = -g.ballVY; }
+
+      // Player paddle hit
+      if (g.ballVX < 0 && g.ballX - BALL_R < 20 && g.ballX + BALL_R > 10 &&
+          g.ballY > g.playerY && g.ballY < g.playerY + PADDLE_H) {
+        g.ballX = 20 + BALL_R;
+        g.ballVX = -g.ballVX;
+      }
+
+      // AI paddle hit
+      var aix = cw - 20;
+      if (g.ballVX > 0 && g.ballX + BALL_R > aix && g.ballX - BALL_R < aix + PADDLE_W &&
+          g.ballY > g.aiY && g.ballY < g.aiY + PADDLE_H) {
+        g.ballX = aix - BALL_R;
+        g.ballVX = -g.ballVX;
+      }
+
+      // Goals: reset ball
+      function rb() {
+        g.ballX = cw/2; g.ballY = ch/2;
+        g.ballVX = -200; g.ballVY = 50;
+      }
+      if (g.ballX < 0) { g.aiScore++; rb(); }
+      if (g.ballX > cw) { g.addScore(1); rb(); }
+      if (g.score >= 7 || g.aiScore >= 7) g.gameOver();
+    },
+
+    draw: function(ctx) {
+      var g = this;
+      var w = g.canvas.width, h = g.canvas.height;
+      ctx.fillStyle = '#0a0a0a';
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#00f0ff';
+      ctx.fillRect(10, g.playerY, PADDLE_W, PADDLE_H);
+      ctx.fillStyle = '#ff006e';
+      ctx.fillRect(w - 10 - PADDLE_W, g.aiY, PADDLE_W, PADDLE_H);
+      ctx.fillStyle = '#ffbe0b';
+      ctx.beginPath();
+      ctx.arc(g.ballX, g.ballY, BALL_R, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+})();
+</script>
+</body></html>

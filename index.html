@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ARCADEBASE</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .landing {
+      display: flex; flex-direction: column; align-items: center;
+      min-height: 100vh; padding: 20px 12px; overflow-y: auto;
+      background: var(--bg-dark);
+    }
+    .landing h1 {
+      font-size: 24px; color: var(--neon-cyan);
+      text-shadow: 0 0 20px rgba(0,240,255,0.6), 0 0 40px rgba(0,240,255,0.3);
+      margin-bottom: 6px; letter-spacing: 4px;
+    }
+    .landing .tagline {
+      font-size: 9px; color: var(--text-dim); margin-bottom: 28px;
+    }
+    .game-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 14px; max-width: 500px; width: 100%;
+    }
+    @media (min-width: 500px) { .game-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 700px) { .game-grid { grid-template-columns: repeat(5, 1fr); } }
+
+    .game-card {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      aspect-ratio: 1; background: var(--bg-panel);
+      border: 2px solid #333; border-radius: 8px;
+      text-decoration: none; color: var(--text-light);
+      transition: all 0.2s; gap: 8px;
+      padding: 10px;
+    }
+    .game-card:hover, .game-card:active {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0,240,255,0.4);
+      transform: translateY(-2px);
+    }
+    .game-card .icon { font-size: 36px; }
+    .game-card .name { font-size: 9px; text-align: center; line-height: 1.4; }
+
+    .footer { margin-top: 30px; font-size: 7px; color: var(--text-dim); margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div class="landing">
+    <h1>ARCADEBASE</h1>
+    <p class="tagline">RETRO ARCADE · 10 GAMES · TOUCH READY</p>
+    <div class="game-grid">
+      <a class="game-card" href="games/tetris/index.html">
+        <span class="icon">🧱</span><span class="name">TETRIS</span>
+      </a>
+      <a class="game-card" href="games/snake/index.html">
+        <span class="icon">🐍</span><span class="name">SNAKE</span>
+      </a>
+      <a class="game-card" href="games/pong/index.html">
+        <span class="icon">🏓</span><span class="name">PONG</span>
+      </a>
+      <a class="game-card" href="games/breakout/index.html">
+        <span class="icon">🧱</span><span class="name">BREAKOUT</span>
+      </a>
+      <a class="game-card" href="games/minesweeper/index.html">
+        <span class="icon">💣</span><span class="name">MINESWEEPER</span>
+      </a>
+      <a class="game-card" href="games/flappybird/index.html">
+        <span class="icon">🐤</span><span class="name">FLAPPY BIRD</span>
+      </a>
+      <a class="game-card" href="games/2048/index.html">
+        <span class="icon">🔢</span><span class="name">2048</span>
+      </a>
+      <a class="game-card" href="games/spaceinvaders/index.html">
+        <span class="icon">👾</span><span class="name">SPACE INVADERS</span>
+      </a>
+      <a class="game-card" href="games/pacman/index.html">
+        <span class="icon">👻</span><span class="name">PAC-MAN</span>
+      </a>
+      <a class="game-card" href="games/asteroids/index.html">
+        <span class="icon">☄️</span><span class="name">ASTEROIDS</span>
+      </a>
+    </div>
+    <p class="footer">ARCADEBASE v1.0 · MOBILE-FIRST RETRO GAMING</p>
+  </div>
+</body>
+</html>
