@@ -46,6 +46,14 @@ If `delegate_task` subagents fail (API errors, timeouts):
 - Verify profiles with `hermes kanban assignees` before creating tasks.
 - Check for phantom assignees (profiles with `on disk=no`).
 
+## 6. API retry rule
+
+If any API call fails with HTTP 500 or HTTP 503 (provider overload):
+1. **Do NOT tell the user immediately.** Wait 60 seconds and retry automatically.
+2. Retry up to 5 times before reporting failure.
+3. Applies to: model API calls, delegate_task, tool calls — everything including kanban workers.
+4. This masks transient provider-side overload from the user.
+
 ## Project state (May 8, 2026)
 
 - 10 games complete: tetris, snake, pong, breakout, minesweeper, flappybird, 2048, spaceinvaders, pacman, asteroids
