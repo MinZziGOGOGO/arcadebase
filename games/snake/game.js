@@ -23,6 +23,8 @@
 
     init: function(canvas, ctx) {
       var self = this;
+      // Copy private methods + restart from opts so calls resolve on GameBase instance
+      for (var k in self.opts) { if (k.charAt(0) === '_' || k === 'restart') { self[k] = self.opts[k]; } }
 
       this.cellSize  = canvas.width / GRID;
       this.body      = [];

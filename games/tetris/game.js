@@ -48,7 +48,10 @@
 
     init: function(canvas, ctx) {
       var self = this;
-      self.board = []; self.current = null; self.nextType = null;
+      // Copy private methods from opts onto the GameBase instance so
+      // .call(self) bindings resolve correctly in restart/update/draw
+      for (var k in self.opts) { if (k.charAt(0) === '_') { self[k] = self.opts[k]; } }
+      self.board = null; self.current = null; self.nextType = null;
       self.linesClear = 0; self.level = 1; self.dropTimer = 0; self.backToBack = false;
 
       // Level in HUD

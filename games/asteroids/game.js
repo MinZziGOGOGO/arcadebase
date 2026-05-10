@@ -48,6 +48,9 @@
       self._buttons = {};
       self._buttonTimers = {};
 
+      // Copy _spawnUfo from opts so update() calls resolve
+      self._spawnUfo = self.opts._spawnUfo;
+
       // Attach shoot to self so button handlers can call it
       self._shoot = function() {
         if (self._fireCooldown > 0) return;
@@ -440,6 +443,8 @@
     draw: function(ctx) {
       var self = this;
       var canvas = this.canvas;
+      if (!self.ship) return;  // Not initialized until restart()
+
       var ship = self.ship;
 
       // Background

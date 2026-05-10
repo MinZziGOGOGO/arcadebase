@@ -71,6 +71,8 @@
 
     init: function(canvas, ctx) {
       var self = this;
+      // Copy private methods + restart from opts so calls resolve on GameBase instance
+      for (var k in self.opts) { if (k.charAt(0) === '_' || k === 'restart') { self[k] = self.opts[k]; } }
       self._nextDir = null;
       self._modeTimer = 0;
       self._modeIdx = 0;

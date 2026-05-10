@@ -28,6 +28,8 @@
     // ── Init: touch & keyboard handlers ──
     init(canvas, ctx) {
       const self = this;
+      // Copy private methods + restart from opts so calls resolve on GameBase instance
+      for (const k in self.opts) { if (k[0] === '_' || k === 'restart') { self[k] = self.opts[k]; } }
 
       // Touch — tap to flap
       self._onTouch = (e) => {

@@ -39,6 +39,8 @@
     helpTitle: 'MINESWEEPER RULES',
 
     init(canvas, ctx) {
+      // Copy restart from opts so start() call resolves on GameBase instance
+      for (const k in this.opts) { if (k === 'restart') { this[k] = this.opts[k]; } }
       let pressTimer = null;
       let pressCell = null;
 
@@ -69,9 +71,20 @@
         if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; pressCell = null; }
       });
 
-      // --- Desktop click for flag-mode ---
+      // --- Desktop: click to reveal, right-click to flag ---
       canvas.addEventListener('click', e => {
-        if (!flagMode) return;
+        if (game.state !== 'playing' || game.paused) return;
+        const cell = mouseToCell(canvas, e);
+        if (!cell) return;
+        if (flagMode) {
+          toggleFlag(cell.c, cell.r);
+        } else {
+          revealCell(cell.c, cell.r);
+        }
+      });
+      canvas.addEventListener('contextmenu', e => {
+        e.preventDefault();
+        if (game.state !== 'playing' || game.paused) return;
         const cell = mouseToCell(canvas, e);
         if (cell) toggleFlag(cell.c, cell.r);
       });
